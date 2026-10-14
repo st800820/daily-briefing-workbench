@@ -1,0 +1,8 @@
+# 飞牛小主机 / Docker 专用精简依赖
+# 容器里没有 Windows 微信，故去掉 wcferry（降级方案专用，仅在 WECHAT_ENABLED=True 时才会 import）。
+requests>=2.31.0
+urllib3>=2.0.0
+Pillow>=10.0.0
+# 网页后台 + 内置定时调度
+Flask>=3.0
+APScheduler>=3.10

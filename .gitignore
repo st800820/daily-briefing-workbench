@@ -1,0 +1,39 @@
+# ===== 每日早报工作台 · 开源版 .gitignore =====
+# 重点：任何含真实密钥 / 运行产物的文件都不得入库！
+
+# ---- 含私钥/真实配置，绝不提交 ----
+config.json            # 真实配置（由网页后台生成或自行创建）
+config_local.py        # 本地覆盖配置
+*.local.py
+
+# ---- 运行产物 ----
+logs/
+output/
+data/
+last_push.txt
+*.log
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.Python
+
+# ---- 环境 / 编辑器 ----
+.env
+.env.*
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# ---- 系统/IDE ----
+.DS_Store
+.git/
+
+# ---- 本地记忆/工作区元数据（含私有信息，绝不入库）----
+.workbuddy/

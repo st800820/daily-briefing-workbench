@@ -1,0 +1,60 @@
+{
+  "brand": "你的品牌名",
+  "news_count": 10,
+  "city": "你的城市",
+  "weather_key": "你的聚合数据KEY_在此填写",
+  "tz": "Asia/Shanghai",
+  "source_mode": "netease",
+  "netease_home": "https://m.163.com/news/sub/T1603594732083.html",
+  "schedule": {
+    "enabled": true,
+    "time": "06:30",
+    "max_attempts": 12,
+    "interval_minutes": 10,
+    "weekdays": "all"
+  },
+  "channels": {
+    "wxpusher": {
+      "enabled": false,
+      "token": "AT_你的appToken_或_SPT_你的极简token",
+      "uids": [
+        "UID_你的接收者UID"
+      ],
+      "sub_channel": "clawbot"
+    },
+    "wework": {
+      "enabled": false,
+      "webhook": "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=你的企业微信机器人KEY",
+      "msg_type": "text"
+    },
+    "serverchan": {
+      "enabled": false,
+      "keys": [
+        "SCT你的Server酱SendKey"
+      ]
+    },
+    "dingtalk": {
+      "enabled": false,
+      "webhook": "https://oapi.dingtalk.com/robot/send?access_token=你的钉钉机器人TOKEN",
+      "secret": "SEC你的钉钉机器人加签Secret"
+    },
+    "wechat": {
+      "enabled": false,
+      "target": "filehelper"
+    }
+  },
+  "filters": {
+    "banned_cities": [
+      "黑龙江", "贵州", "太原", "江西", "江苏", "浙江", "安徽",
+      "广东", "河南", "河北", "湖南", "湖北", "陕西", "甘肃", "青海", "海南",
+      "云南", "福建", "广西", "内蒙古", "新疆", "西藏", "宁夏", "辽宁", "吉林"
+    ],
+    "sensitive_words": ["绑架", "强奸", "自杀"],
+    "employee_words": [
+      "工资", "社保", "待遇", "工会", "离职", "补偿", "裁员", "欠薪", "加班", "福利",
+      "公积金", "劳动合同", "劳动争议", "招聘", "求职", "就业"
+    ]
+  },
+  "failure_alert": true,
+  "admin_password": ""
+}

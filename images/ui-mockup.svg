@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 520" font-family="'Segoe UI','Microsoft YaHei',sans-serif">
+  <rect width="920" height="520" fill="#dfe6ef"/>
+  <!-- browser frame -->
+  <rect x="20" y="20" width="880" height="480" rx="14" fill="#ffffff" stroke="#c3ccd9" stroke-width="1.5"/>
+  <!-- title bar -->
+  <rect x="20" y="20" width="880" height="38" rx="14" fill="#eef2f8"/>
+  <rect x="20" y="44" width="880" height="14" fill="#eef2f8"/>
+  <circle cx="44" cy="39" r="6" fill="#ff5f57"/>
+  <circle cx="64" cy="39" r="6" fill="#febc2e"/>
+  <circle cx="84" cy="39" r="6" fill="#28c840"/>
+  <rect x="250" y="30" width="420" height="18" rx="9" fill="#ffffff" stroke="#d4dae3"/>
+  <text x="460" y="43" font-size="11" fill="#6b7785" text-anchor="middle">http://localhost:12345</text>
+
+  <!-- left nav -->
+  <rect x="20" y="58" width="180" height="442" fill="#f3f6fd"/>
+  <text x="40" y="86" font-size="13" font-weight="700" fill="#4a6cf7">⚙ 早报工作台</text>
+  <g font-size="12" fill="#3a4a5e">
+    <rect x="28" y="104" width="156" height="30" rx="7" fill="#e4ecff"/>
+    <text x="42" y="124" fill="#26324a" font-weight="600">📊 概览</text>
+    <text x="42" y="160">📝 基础设置</text>
+    <text x="42" y="190">📰 内容源</text>
+    <text x="42" y="220">📡 推送渠道</text>
+    <text x="42" y="250">⏰ 定时任务</text>
+    <text x="42" y="280">👥 接收者</text>
+    <text x="42" y="310">🛡 内容过滤</text>
+    <text x="42" y="340">🛠 运维日志</text>
+  </g>
+
+  <!-- content area -->
+  <rect x="208" y="58" width="692" height="442" fill="#ffffff"/>
+  <text x="228" y="92" font-size="16" font-weight="700" fill="#1f2d3d">基础设置 / 推送渠道</text>
+  <text x="228" y="114" font-size="11" fill="#6b7785">配置即时生效（写入 config.json 并热更新）</text>
+
+  <!-- card 1 -->
+  <rect x="228" y="128" width="652" height="96" rx="10" fill="#f7f9fc" stroke="#e2e8f0"/>
+  <text x="244" y="150" font-size="12" font-weight="700" fill="#26324a">品牌 / 天气</text>
+  <rect x="244" y="160" width="190" height="26" rx="6" fill="#ffffff" stroke="#cdd5e0"/>
+  <text x="252" y="178" font-size="11" fill="#9aa5b1">品牌名（如：示例品牌）</text>
+  <rect x="450" y="160" width="190" height="26" rx="6" fill="#ffffff" stroke="#cdd5e0"/>
+  <text x="458" y="178" font-size="11" fill="#9aa5b1">天气城市（地级市）</text>
+  <rect x="656" y="160" width="210" height="26" rx="6" fill="#ffffff" stroke="#cdd5e0"/>
+  <text x="664" y="178" font-size="11" fill="#9aa5b1">聚合数据 Weather Key</text>
+
+  <!-- card 2 -->
+  <rect x="228" y="240" width="652" height="120" rx="10" fill="#f7f9fc" stroke="#e2e8f0"/>
+  <text x="244" y="262" font-size="12" font-weight="700" fill="#26324a">推送渠道（独立开关 + 测试推送）</text>
+  <rect x="244" y="274" width="300" height="26" rx="6" fill="#ffffff" stroke="#cdd5e0"/>
+  <text x="252" y="292" font-size="11" fill="#9aa5b1">WxPusher Token（AT_ / SPT_）</text>
+  <rect x="560" y="274" width="300" height="26" rx="6" fill="#ffffff" stroke="#cdd5e0"/>
+  <text x="568" y="292" font-size="11" fill="#9aa5b1">企业微信 Webhook URL</text>
+  <rect x="244" y="308" width="300" height="26" rx="6" fill="#ffffff" stroke="#cdd5e0"/>
+  <text x="252" y="326" font-size="11" fill="#9aa5b1">钉钉 Webhook + 加签 Secret</text>
+  <rect x="560" y="308" width="120" height="26" rx="13" fill="#2e7d32"/>
+  <text x="620" y="326" font-size="11" fill="#ffffff" text-anchor="middle">测试推送</text>
+
+  <!-- card 3 -->
+  <rect x="228" y="376" width="652" height="100" rx="10" fill="#f7f9fc" stroke="#e2e8f0"/>
+  <text x="244" y="398" font-size="12" font-weight="700" fill="#26324a">定时任务</text>
+  <rect x="244" y="410" width="150" height="26" rx="6" fill="#ffffff" stroke="#cdd5e0"/>
+  <text x="252" y="428" font-size="11" fill="#9aa5b1">推送时间 06:30</text>
+  <rect x="410" y="410" width="120" height="26" rx="6" fill="#ffffff" stroke="#cdd5e0"/>
+  <text x="418" y="428" font-size="11" fill="#9aa5b1">重试 12 次</text>
+  <rect x="546" y="410" width="120" height="26" rx="6" fill="#ffffff" stroke="#cdd5e0"/>
+  <text x="554" y="428" font-size="11" fill="#9aa5b1">间隔 10 分</text>
+  <rect x="700" y="408" width="160" height="30" rx="15" fill="#4a6cf7"/>
+  <text x="780" y="428" font-size="12" fill="#ffffff" text-anchor="middle">保存配置</text>
+  <rect x="244" y="446" width="180" height="24" rx="12" fill="#2e7d32"/>
+  <text x="334" y="463" font-size="11" fill="#ffffff" text-anchor="middle">立即生成并推送</text>
+
+  <text x="228" y="500" font-size="10" fill="#9aa5b1">* 示意图：实际界面以 src/templates/admin.html 为准，可在本地 python src/admin_app.py 后浏览器查看。</text>
+</svg>

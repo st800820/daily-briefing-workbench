@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 420" font-family="'Segoe UI','Microsoft YaHei',sans-serif">
+  <rect width="920" height="420" fill="#f7f9fc"/>
+  <text x="30" y="38" font-size="22" font-weight="700" fill="#1f2d3d">每日运行数据流（一次推送生命周期）</text>
+  <text x="30" y="62" font-size="13" fill="#6b7785">365 约 06:35 发稿 · 重试窗口覆盖 06:30–08:30 · 全程纯 HTTP、无需解锁桌面</text>
+
+  <defs>
+    <marker id="arw2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#7a8aa0"/>
+    </marker>
+  </defs>
+
+  <!-- steps -->
+  <g font-size="12">
+    <!-- 1 -->
+    <rect x="20" y="150" width="100" height="96" rx="10" fill="#eef4ff" stroke="#4a6cf7" stroke-width="2"/>
+    <text x="70" y="178" font-size="20" font-weight="700" fill="#4a6cf7" text-anchor="middle">1</text>
+    <text x="70" y="202" font-size="12" font-weight="700" fill="#26324a" text-anchor="middle">定时触发</text>
+    <text x="70" y="222" font-size="11" fill="#4a6cf7" text-anchor="middle">APScheduler</text>
+    <text x="70" y="238" font-size="11" fill="#6b7785" text-anchor="middle">06:30</text>
+
+    <!-- 2 -->
+    <rect x="128" y="150" width="100" height="96" rx="10" fill="#fff4e5" stroke="#e65100" stroke-width="2"/>
+    <text x="178" y="178" font-size="20" font-weight="700" fill="#e65100" text-anchor="middle">2</text>
+    <text x="178" y="202" font-size="12" font-weight="700" fill="#26324a" text-anchor="middle">重试等待</text>
+    <text x="178" y="222" font-size="11" fill="#e65100" text-anchor="middle">等365发稿</text>
+    <text x="178" y="238" font-size="11" fill="#6b7785" text-anchor="middle">每10分×N次</text>
+
+    <!-- 3 -->
+    <rect x="236" y="150" width="100" height="96" rx="10" fill="#eef4ff" stroke="#4a6cf7" stroke-width="2"/>
+    <text x="286" y="178" font-size="20" font-weight="700" fill="#4a6cf7" text-anchor="middle">3</text>
+    <text x="286" y="202" font-size="12" font-weight="700" fill="#26324a" text-anchor="middle">抓主页</text>
+    <text x="286" y="222" font-size="11" fill="#4a6cf7" text-anchor="middle">网易号静态</text>
+    <text x="286" y="238" font-size="11" fill="#6b7785" text-anchor="middle">HTML</text>
+
+    <!-- 4 -->
+    <rect x="344" y="150" width="100" height="96" rx="10" fill="#eef4ff" stroke="#4a6cf7" stroke-width="2"/>
+    <text x="394" y="178" font-size="20" font-weight="700" fill="#4a6cf7" text-anchor="middle">4</text>
+    <text x="394" y="202" font-size="12" font-weight="700" fill="#26324a" text-anchor="middle">解析正文</text>
+    <text x="394" y="222" font-size="11" fill="#4a6cf7" text-anchor="middle">严格比对</text>
+    <text x="394" y="238" font-size="11" fill="#6b7785" text-anchor="middle">今日日期</text>
+
+    <!-- 5 -->
+    <rect x="452" y="150" width="100" height="96" rx="10" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+    <text x="502" y="178" font-size="20" font-weight="700" fill="#2e7d32" text-anchor="middle">5</text>
+    <text x="502" y="202" font-size="12" font-weight="700" fill="#26324a" text-anchor="middle">取天气</text>
+    <text x="502" y="222" font-size="11" fill="#2e7d32" text-anchor="middle">聚合数据</text>
+    <text x="502" y="238" font-size="11" fill="#6b7785" text-anchor="middle">实时</text>
+
+    <!-- 6 -->
+    <rect x="560" y="150" width="100" height="96" rx="10" fill="#eef4ff" stroke="#4a6cf7" stroke-width="2"/>
+    <text x="610" y="178" font-size="20" font-weight="700" fill="#4a6cf7" text-anchor="middle">6</text>
+    <text x="610" y="202" font-size="12" font-weight="700" fill="#26324a" text-anchor="middle">拼装排版</text>
+    <text x="610" y="222" font-size="11" fill="#4a6cf7" text-anchor="middle">报头+新闻</text>
+    <text x="610" y="238" font-size="11" fill="#6b7785" text-anchor="middle">+寄语</text>
+
+    <!-- 7 -->
+    <rect x="668" y="150" width="100" height="96" rx="10" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
+    <text x="718" y="178" font-size="20" font-weight="700" fill="#2e7d32" text-anchor="middle">7</text>
+    <text x="718" y="202" font-size="12" font-weight="700" fill="#26324a" text-anchor="middle">多通道推</text>
+    <text x="718" y="222" font-size="11" fill="#2e7d32" text-anchor="middle">WxP/企微</text>
+    <text x="718" y="238" font-size="11" fill="#6b7785" text-anchor="middle">/钉钉</text>
+
+    <!-- 8 -->
+    <rect x="776" y="150" width="100" height="96" rx="10" fill="#f1f3f5" stroke="#9aa5b1" stroke-width="2"/>
+    <text x="826" y="178" font-size="20" font-weight="700" fill="#5a6573" text-anchor="middle">8</text>
+    <text x="826" y="202" font-size="12" font-weight="700" fill="#26324a" text-anchor="middle">落盘归档</text>
+    <text x="826" y="222" font-size="11" fill="#5a6573" text-anchor="middle">output/</text>
+    <text x="826" y="238" font-size="11" fill="#6b7785" text-anchor="middle">去重</text>
+  </g>
+
+  <!-- arrows between -->
+  <g stroke="#7a8aa0" stroke-width="1.6" marker-end="url(#arw2)">
+    <line x1="120" y1="198" x2="126" y2="198"/>
+    <line x1="228" y1="198" x2="234" y2="198"/>
+    <line x1="336" y1="198" x2="342" y2="198"/>
+    <line x1="444" y1="198" x2="450" y2="198"/>
+    <line x1="552" y1="198" x2="558" y2="198"/>
+    <line x1="660" y1="198" x2="666" y2="198"/>
+    <line x1="768" y1="198" x2="774" y2="198"/>
+  </g>
+
+  <!-- retry loop annotation -->
+  <g>
+    <rect x="128" y="300" width="208" height="64" rx="10" fill="#fff9f0" stroke="#e65100" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <text x="232" y="324" font-size="12" font-weight="700" fill="#7a3b00" text-anchor="middle">重试循环（步骤 2↔3↔4）</text>
+    <text x="232" y="344" font-size="11" fill="#a85a16" text-anchor="middle">未命中今日文章 → 等 10 分钟再抓</text>
+    <text x="232" y="358" font-size="11" fill="#a85a16" text-anchor="middle">最多 N 次，覆盖 365 发稿时间</text>
+  </g>
+  <line x1="178" y1="246" x2="178" y2="298" stroke="#e65100" stroke-width="1.4" stroke-dasharray="5 4" marker-end="url(#arw2)"/>
+
+  <!-- bottom note -->
+  <text x="30" y="400" font-size="12" fill="#6b7785">说明：步骤 2 的重试机制保证了「定时任务早于发稿时间启动」也不会抓到昨天的内容（严格比对文章自身日期行）。</text>
+</svg>

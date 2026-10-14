@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>每日早报工作台 · 后台配置</title>
+<style>
+  :root{
+    --bg:#f5f7fa; --panel:#fff; --ink:#1f2937; --muted:#6b7280; --line:#e5e7eb;
+    --brand:#d23b3b; --brand-soft:#fdeaea; --ok:#16a34a; --warn:#f59e0b; --off:#9ca3af;
+    --accent:#2563eb; --radius:10px; --shadow:0 1px 3px rgba(0,0,0,.08);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,"PingFang SC","Microsoft YaHei",Segoe UI,Roboto,sans-serif;
+       background:var(--bg);color:var(--ink);font-size:14px;line-height:1.6}
+  .topbar{height:56px;background:var(--panel);border-bottom:1px solid var(--line);display:flex;
+          align-items:center;padding:0 20px;position:sticky;top:0;z-index:20}
+  .topbar .logo{font-weight:700;font-size:16px;color:var(--brand)}
+  .topbar .logo small{color:var(--muted);font-weight:400;margin-left:8px;font-size:12px}
+  .spacer{flex:1}
+  .status{color:var(--muted);margin-right:14px;font-size:13px}
+  .btn{border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 14px;cursor:pointer;font-size:13px}
+  .btn:hover{background:#f3f4f6}
+  .btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+  .btn.primary:hover{background:#b53030}
+  .btn:disabled{opacity:.55;cursor:not-allowed}
+  .wrap{display:flex;max-width:1180px;margin:0 auto;padding:18px}
+  .side{width:190px;flex:none;margin-right:18px}
+  .side a{display:block;padding:9px 12px;border-radius:8px;color:var(--ink);text-decoration:none;margin-bottom:4px;cursor:pointer}
+  .side a.active{background:var(--brand-soft);color:var(--brand);font-weight:600}
+  .side a:hover{background:#eef2f7}
+  .main{flex:1;min-width:0}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px 20px;margin-bottom:18px}
+  .card h2{margin:0 0 4px;font-size:16px}
+  .card .desc{color:var(--muted);font-size:12.5px;margin:0 0 14px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 22px}
+  .field{display:flex;flex-direction:column;gap:5px}
+  .field.full{grid-column:1/-1}
+  label.flab{font-size:13px;font-weight:600}
+  label.flab span{color:var(--muted);font-weight:400;font-size:12px}
+  .field input,.field select,.field textarea{width:100%;padding:8px 10px;border:1px solid var(--line);
+        border-radius:8px;font-size:13px;font-family:inherit;background:#fff;color:var(--ink)}
+  .field textarea{resize:vertical;min-height:64px}
+  .hint{font-size:12px;color:var(--muted)}
+  .switch{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;user-select:none}
+  .switch .track{width:40px;height:22px;border-radius:99px;background:var(--off);position:relative;transition:.2s}
+  .switch .track::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:.2s}
+  .switch.on .track{background:var(--ok)} .switch.on .track::after{left:20px}
+  .chan-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .chan{border:1px solid var(--line);border-radius:10px;padding:14px;background:#fcfcfd}
+  .chan .head{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+  .chan .name{font-weight:700}
+  .chan .tag{font-size:11px;padding:2px 8px;border-radius:99px;background:#eef2f7;color:var(--muted)}
+  .chan .tag.primary{background:var(--brand-soft);color:var(--brand)}
+  .chan .tag.warn{background:#fff4e0;color:#b9770a}
+  .warnbox{background:#fff7ed;border:1px solid #fed7aa;color:#9a5b09;font-size:12px;padding:8px 10px;border-radius:8px;margin-top:8px}
+  .kv{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .stat{background:#fafafa;border:1px solid var(--line);border-radius:10px;padding:12px}
+  .stat .t{color:var(--muted);font-size:12px} .stat .v{font-size:16px;font-weight:700;margin-top:2px}
+  .preview{background:#fff;border:1px dashed var(--line);border-radius:10px;padding:14px;white-space:pre-wrap;
+           font-size:13px;color:#374151;max-height:240px;overflow:auto}
+  .footer-note{color:var(--muted);font-size:12px;text-align:center;padding:10px}
+  .toast{position:fixed;top:68px;right:20px;background:#111827;color:#fff;padding:10px 16px;border-radius:8px;
+         font-size:13px;opacity:0;transform:translateY(-8px);transition:.25s;z-index:50;max-width:320px}
+  .toast.show{opacity:1;transform:none}
+  .toast.err{background:#b91c1c} .toast.ok{background:#15803d}
+  .logbox{background:#0f172a;color:#d1d5db;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;
+          border-radius:10px;padding:14px;white-space:pre-wrap;max-height:300px;overflow:auto}
+  /* 登录遮罩 */
+  .mask{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:center;justify-content:center;z-index:60}
+  .mask.show{display:flex}
+  .login{background:#fff;border-radius:12px;padding:24px;width:320px;box-shadow:var(--shadow)}
+  .login h3{margin:0 0 12px}
+  .login input{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:8px;margin-bottom:12px;font-size:14px}
+  @media(max-width:860px){.side{display:none}.grid,.chan-grid,.kv{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="logo">📰 每日早报工作台<small>后台配置</small></div>
+    <div class="spacer"></div>
+    <div class="status" id="topStatus">加载中…</div>
+    <button class="btn" id="btnRun">立即生成并推送</button>
+    <button class="btn primary" id="btnSave">保存配置</button>
+  </div>
+
+  <div class="wrap">
+    <nav class="side">
+      <a class="active" data-sec="overview">📊 概览</a>
+      <a data-sec="basic">⚙️ 基础设置</a>
+      <a data-sec="source">🔗 内容源</a>
+      <a data-sec="channels">📡 推送渠道</a>
+      <a data-sec="schedule">⏰ 定时任务</a>
+      <a data-sec="recipients">👥 接收者</a>
+      <a data-sec="filters">🧹 内容过滤</a>
+      <a data-sec="ops">🛠 运维与日志</a>
+    </nav>
+
+    <main class="main" id="main">
+      <!-- 概览 -->
+      <div class="card" data-card="overview">
+        <h2>概览</h2>
+        <p class="desc">当前运行状态与渠道健康度（实时读取）。</p>
+        <div class="kv">
+          <div class="stat"><div class="t">上次推送</div><div class="v" id="stLast">—</div></div>
+          <div class="stat"><div class="t">下次推送</div><div class="v" id="stNext">—</div></div>
+          <div class="stat"><div class="t">内容源</div><div class="v" id="stSrc">—</div></div>
+          <div class="stat"><div class="t">启用通道</div><div class="v" id="stCh">—</div></div>
+        </div>
+        <div style="margin-top:14px;font-weight:600;font-size:13px">今日早报预览</div>
+        <div class="preview" id="stPreview">（暂无）</div>
+      </div>
+
+      <!-- 基础设置 -->
+      <div class="card" data-card="basic">
+        <h2>⚙️ 基础设置</h2>
+        <p class="desc">报头品牌、天气接口与生成条数。天气接口使用你的聚合数据 Key，查询实时天气。</p>
+        <div class="grid">
+          <div class="field"><label class="flab">公司品牌名 <span>（报头前缀）</span></label><input id="brand" /></div>
+          <div class="field"><label class="flab">新闻条数</label><input id="news_count" type="number" min="1" max="20" /></div>
+          <div class="field"><label class="flab">天气城市 <span>（地级市）</span></label><input id="city" />
+            <div class="hint">聚合数据接口仅支持地级市（如"北京"），填"朝阳区"会返回不支持。</div></div>
+          <div class="field"><label class="flab">天气 API Key <span>（聚合数据）</span></label><input id="weather_key" type="password" /></div>
+          <div class="field full"><label class="flab">时区</label>
+            <select id="tz"><option>Asia/Shanghai (UTC+8)</option><option>UTC</option><option>其他（改 config.json）</option></select></div>
+        </div>
+      </div>
+
+      <!-- 内容源 -->
+      <div class="card" data-card="source">
+        <h2>🔗 内容源</h2>
+        <p class="desc">决定"去哪里取《365资讯简报》当日文章"。当前主力为网易号固定主页（纯HTTP、锁屏可跑）。</p>
+        <div class="grid">
+          <div class="field"><label class="flab">内容源模式</label>
+            <select id="source_mode">
+              <option value="netease">netease — 网易号主页（已验证·主用）</option>
+              <option value="wechat">wechat — 微信客户端（需降级3.9）</option>
+              <option value="search">search — Anspire搜索（兜底）</option>
+              <option value="rss">rss — 镜像源（已失效）</option>
+              <option value="url">url — 手动传链接</option>
+            </select></div>
+          <div class="field"><label class="flab">网易号主页 URL</label><input id="netease_home" /></div>
+          <div class="field full"><label class="flab">公众号身份 <span>（只读）</span></label>
+            <input value="微信号 infor365 / 原始ID gh_9a06dc237662" disabled /></div>
+        </div>
+      </div>
+
+      <!-- 推送渠道 -->
+      <div class="card" data-card="channels">
+        <h2>📡 推送渠道 <span style="font-size:11px;background:#eef2f7;color:var(--muted);border-radius:6px;padding:1px 7px">核心</span></h2>
+        <p class="desc">启用通道并填写各自 API 入口。已验证通道置顶，受限通道明确标注。</p>
+        <div class="chan-grid">
+          <div class="chan">
+            <div class="head"><span class="name">WxPusher</span><span class="tag primary">已验证·落微信</span></div>
+            <label class="switch" data-ch="wxpusher"><span class="track"></span> 启用</label>
+            <div class="grid" style="margin-top:10px">
+              <div class="field full"><label class="flab">appToken (AT_)</label><input id="wx_token" type="password" /></div>
+              <div class="field full"><label class="flab">接收 UID（每行一个）</label><textarea id="wx_uids"></textarea></div>
+              <div class="field full"><label class="flab">通道</label>
+                <select id="wx_sub"><option value="clawbot">微信ClawBot(iLink) — 落微信会话</option><option value="app">WxPusher App — 落客户端</option></select></div>
+              <div class="field full"><button class="btn" data-test="wxpusher">测试推送</button></div>
+            </div>
+          </div>
+
+          <div class="chan">
+            <div class="head"><span class="name">企业微信机器人</span><span class="tag primary">已验证·落群</span></div>
+            <label class="switch" data-ch="wework"><span class="track"></span> 启用</label>
+            <div class="grid" style="margin-top:10px">
+              <div class="field full"><label class="flab">Webhook URL</label><input id="we_webhook" type="password" /></div>
+              <div class="field full"><label class="flab">消息类型</label>
+                <select id="we_type"><option value="text">text（原样多行·推荐）</option><option value="image">image（PNG卡片）</option><option value="markdown">markdown（轻美化）</option></select></div>
+              <div class="field full"><button class="btn" data-test="wework">测试推送</button></div>
+            </div>
+          </div>
+
+          <div class="chan">
+            <div class="head"><span class="name">钉钉机器人</span><span class="tag">新增</span></div>
+            <label class="switch" data-ch="dingtalk"><span class="track"></span> 启用</label>
+            <div class="grid" style="margin-top:10px">
+              <div class="field full"><label class="flab">Webhook（含 access_token）</label><input id="dt_webhook" type="password" placeholder="https://oapi.dingtalk.com/robot/send?access_token=xxx" /></div>
+              <div class="field full"><label class="flab">加签 Secret（可选）</label><input id="dt_secret" type="password" placeholder="留空=不加签" /></div>
+              <div class="field full"><button class="btn" data-test="dingtalk">测试推送</button></div>
+            </div>
+          </div>
+
+          <div class="chan">
+            <div class="head"><span class="name">Server酱</span><span class="tag">未启用</span></div>
+            <label class="switch" data-ch="serverchan"><span class="track"></span> 启用</label>
+            <div class="grid" style="margin-top:10px">
+              <div class="field full"><label class="flab">SendKey（SCT…，每行一个）</label><textarea id="sc_keys"></textarea></div>
+              <div class="field full"><button class="btn" data-test="serverchan">测试推送</button></div>
+            </div>
+            <div class="warnbox">⚠️ 推到微信"服务通知"，排版易串行、emoji 差，仅作兜底。</div>
+          </div>
+
+          <div class="chan">
+            <div class="head"><span class="name">微信 Ferry</span><span class="tag warn">需降级·受限</span></div>
+            <label class="switch" data-ch="wechat"><span class="track"></span> 启用</label>
+            <div class="grid" style="margin-top:10px">
+              <div class="field full"><label class="flab">目标</label>
+                <select id="wc_target"><option value="filehelper">文件传输助手（人工转发）</option><option value="chatroom">指定群聊 wxid（阶段2）</option></select></div>
+            </div>
+            <div class="warnbox">⚠️ 仅当用户同意把微信降级到 3.9.x 才可启用，否则勿开。</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 定时任务 -->
+      <div class="card" data-card="schedule">
+        <h2>⏰ 定时任务</h2>
+        <p class="desc">每日自动触发时间与"扑空重试"策略（365 通常 06:35–07:00 发布，首跑早了靠重试兜底）。</p>
+        <div class="grid">
+          <div class="field"><label class="flab">启用定时推送</label><label class="switch" id="sch_en"><span class="track"></span> 开</label></div>
+          <div class="field"><label class="flab">推送时间 <span>（HH:MM）</span></label><input id="sch_time" type="time" value="06:30" /></div>
+          <div class="field"><label class="flab">重试次数</label><input id="sch_attempts" type="number" min="0" max="30" /></div>
+          <div class="field"><label class="flab">重试间隔（分钟）</label><input id="sch_interval" type="number" min="1" max="60" /></div>
+          <div class="field full"><label class="flab">每周运行日</label>
+            <select id="sch_weekdays"><option value="all">每天（周一至周日）</option><option value="weekdays">仅工作日（周一至周五）</option></select>
+            <div class="hint">"次数"=每日 1 次（按日期去重）+ 上述重试次数（仅用于等待 365 发稿）。</div></div>
+        </div>
+      </div>
+
+      <!-- 接收者 -->
+      <div class="card" data-card="recipients">
+        <h2>👥 接收者</h2>
+        <p class="desc">推送发往谁。WxPusher 按 UID；企业微信由 Webhook 决定群；钉钉由机器人决定群；Ferry 可指定传输助手/群。</p>
+        <div class="grid">
+          <div class="field full"><label class="flab">WxPusher 接收者 UID <span>（每行一个，同渠道页）</span></label><textarea id="rc_wx_uids" disabled></textarea></div>
+          <div class="field full"><label class="flab">企业微信 / 钉钉目标</label><input value="由各自 Webhook/机器人绑定决定，无需单独填接收人" disabled /></div>
+          <div class="field full"><label class="flab">Ferry 目标</label><select id="rc_wc_target"><option value="filehelper">文件传输助手</option><option value="chatroom">指定群聊 wxid</option></select></div>
+        </div>
+      </div>
+
+      <!-- 内容过滤 -->
+      <div class="card" data-card="filters">
+        <h2>🧹 内容过滤</h2>
+        <p class="desc">智能筛选规则调优。保留重大国际/国内新闻，屏蔽无关地域与敏感词。</p>
+        <div class="grid">
+          <div class="field full"><label class="flab">屏蔽城市/地域 <span>（逗号或换行分隔）</span></label><textarea id="fl_banned"></textarea></div>
+          <div class="field full"><label class="flab">敏感词 <span>（命中整条丢弃）</span></label><textarea id="fl_sensitive"></textarea></div>
+          <div class="field full"><label class="flab">员工相关词 <span>（保留·用于内部关注）</span></label><textarea id="fl_employee"></textarea></div>
+        </div>
+      </div>
+
+      <!-- 运维 -->
+      <div class="card" data-card="ops">
+        <h2>🛠 运维与日志</h2>
+        <p class="desc">手动触发、通道自检、日志查看与配置备份。</p>
+        <div class="grid">
+          <div class="field"><label class="flab">立即执行</label>
+            <div><button class="btn" id="btnRun2">生成并推送</button> <button class="btn" id="btnPreview">仅生成预览</button></div></div>
+          <div class="field"><label class="flab">失败告警</label><label class="switch" id="fa_en"><span class="track"></span> 推送失败通知</label>
+            <div class="hint">任一通道失败时在日志标红（可选接入额外通知，后续扩展）。</div></div>
+          <div class="field"><label class="flab">配置备份</label>
+            <div><button class="btn" id="btnExport">导出 config.json</button> <button class="btn" id="btnImport">导入</button><input id="fileImport" type="file" accept="application/json" style="display:none" /></div></div>
+          <div class="field full"><label class="flab">运行日志</label><div class="logbox" id="logbox">（点击"刷新日志"加载）</div>
+            <div style="margin-top:8px"><button class="btn" id="btnLogs">刷新日志</button></div></div>
+        </div>
+      </div>
+
+      <div class="footer-note">配置保存即生效（写入 config.json 并热更新）。定时由本后台内置调度器（APScheduler）触发，Docker 中不再使用 cron。</div>
+    </main>
+  </div>
+
+  <!-- 登录遮罩 -->
+  <div class="mask" id="mask"><div class="login">
+    <h3>后台口令</h3>
+    <input id="pwInput" type="password" placeholder="请输入 ADMIN_PASSWORD" />
+    <button class="btn primary" id="pwOk" style="width:100%">进入</button>
+  </div></div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+const $ = s => document.querySelector(s);
+let PW = "";          // 当前口令（若启用）
+let CONF = null;      // 当前配置
+
+function toast(msg, kind){const t=$("#toast");t.textContent=msg;t.className="toast show "+(kind||"");setTimeout(()=>t.className="toast",2600);}
+function authHeaders(){const h={};if(PW)h["X-Admin-Password"]=PW;return h;}
+
+// ---- 区块切换 ----
+document.querySelectorAll(".side a").forEach(a=>a.onclick=()=>{
+  document.querySelectorAll(".side a").forEach(x=>x.classList.remove("active"));
+  a.classList.add("active");
+  const sec=a.dataset.sec;
+  document.querySelectorAll(".card").forEach(c=>c.style.display = (c.dataset.card===sec||(sec==="recipients"&&c.dataset.card==="recipients"))?"block":"none");
+  if(sec==="overview") refreshStatus();
+  if(sec==="ops") loadLogs();
+});
+// 默认只显示概览
+function showOnly(sec){document.querySelectorAll(".card").forEach(c=>c.style.display=(c.dataset.card===sec)?"block":"none");}
+
+// ---- 开关绑定 ----
+function bindSwitch(el, on){el.classList.toggle("on", on);}
+document.querySelectorAll(".switch[data-ch]").forEach(s=>{
+  s.onclick=()=>{CONF=CONF||{};CONF.channels=CONF.channels||{};const ch=s.dataset.ch;
+    CONF.channels[ch]=CONF.channels[ch]||{};CONF.channels[ch].enabled=!s.classList.contains("on");
+    bindSwitch(s, CONF.channels[ch].enabled);};
+});
+
+// ---- 加载配置 ----
+async function loadConf(){
+  const meta = await (await fetch("/api/meta")).json();
+  if(meta.require_auth){$("#mask").classList.add("show");return;}
+  const r = await fetch("/api/config",{headers:authHeaders()});
+  if(r.status===401){$("#mask").classList.add("show");return;}
+  CONF = await r.json();
+  fillForm(CONF);
+  refreshStatus();
+}
+
+function fillForm(c){
+  $("#brand").value=c.brand||""; $("#news_count").value=c.news_count||10;
+  $("#city").value=c.city||""; $("#weather_key").value=c.weather_key||""; $("#tz").value=c.tz||"Asia/Shanghai";
+  $("#source_mode").value=c.source_mode||"netease"; $("#netease_home").value=c.netease_home||"";
+  const ch=c.channels||{};
+  document.querySelectorAll(".switch[data-ch]").forEach(s=>{const k=s.dataset.ch;bindSwitch(s,!!(ch[k]&&ch[k].enabled));});
+  $("#wx_token").value=(ch.wxpusher&&ch.wxpusher.token)||"";
+  $("#wx_uids").value=((ch.wxpusher&&ch.wxpusher.uids)||[]).join("\n");
+  $("#wx_sub").value=(ch.wxpusher&&ch.wxpusher.sub_channel)||"clawbot";
+  $("#we_webhook").value=(ch.wework&&ch.wework.webhook)||"";
+  $("#we_type").value=(ch.wework&&ch.wework.msg_type)||"text";
+  $("#dt_webhook").value=(ch.dingtalk&&ch.dingtalk.webhook)||"";
+  $("#dt_secret").value=(ch.dingtalk&&ch.dingtalk.secret)||"";
+  $("#sc_keys").value=((ch.serverchan&&ch.serverchan.keys)||[]).join("\n");
+  $("#wc_target").value=(ch.wechat&&ch.wechat.target)||"filehelper";
+  const sc=c.schedule||{};
+  bindSwitch($("#sch_en"), sc.enabled!==false);
+  $("#sch_time").value=sc.time||"06:30"; $("#sch_attempts").value=sc.max_attempts||12;
+  $("#sch_interval").value=sc.interval_minutes||10; $("#sch_weekdays").value=sc.weekdays||"all";
+  const fl=c.filters||{};
+  $("#fl_banned").value=(fl.banned_cities||[]).join("\n");
+  $("#fl_sensitive").value=(fl.sensitive_words||[]).join("\n");
+  $("#fl_employee").value=(fl.employee_words||[]).join("\n");
+  bindSwitch($("#fa_en"), c.failure_alert!==false);
+  $("#rc_wx_uids").value=((ch.wxpusher&&ch.wxpusher.uids)||[]).join("\n");
+  $("#rc_wc_target").value=(ch.wechat&&ch.wechat.target)||"filehelper";
+}
+
+function splitLines(s){return (s||"").split(/[\n,，]+/).map(x=>x.trim()).filter(Boolean);}
+function collectForm(){
+  const ch=CONF.channels||{};
+  ch.wxpusher=ch.wxpusher||{};ch.wework=ch.wework||{};ch.serverchan=ch.serverchan||{};ch.dingtalk=ch.dingtalk||{};ch.wechat=ch.wechat||{};
+  return {
+    brand:$("#brand").value, news_count:parseInt($("#news_count").value)||10,
+    city:$("#city").value, weather_key:$("#weather_key").value, tz:$("#tz").value,
+    source_mode:$("#source_mode").value, netease_home:$("#netease_home").value,
+    schedule:{enabled:$("#sch_en").classList.contains("on"), time:$("#sch_time").value,
+      max_attempts:parseInt($("#sch_attempts").value)||12, interval_minutes:parseInt($("#sch_interval").value)||10,
+      weekdays:$("#sch_weekdays").value},
+    channels:{
+      wxpusher:{enabled:!!(ch.wxpusher.enabled), token:$("#wx_token").value, uids:splitLines($("#wx_uids").value), sub_channel:$("#wx_sub").value},
+      wework:{enabled:!!(ch.wework.enabled), webhook:$("#we_webhook").value, msg_type:$("#we_type").value},
+      serverchan:{enabled:!!(ch.serverchan.enabled), keys:splitLines($("#sc_keys").value)},
+      dingtalk:{enabled:!!(ch.dingtalk.enabled), webhook:$("#dt_webhook").value, secret:$("#dt_secret").value},
+      wechat:{enabled:!!(ch.wechat.enabled), target:$("#wc_target").value}
+    },
+    filters:{banned_cities:splitLines($("#fl_banned").value), sensitive_words:splitLines($("#fl_sensitive").value), employee_words:splitLines($("#fl_employee").value)},
+    failure_alert:$("#fa_en").classList.contains("on"),
+    admin_password:CONF.admin_password||""
+  };
+}
+
+// ---- 保存 ----
+$("#btnSave").onclick=async()=>{
+  const body=collectForm();
+  const r=await fetch("/api/config",{method:"PUT",headers:Object.assign({"Content-Type":"application/json"},authHeaders()),body:JSON.stringify(body)});
+  const j=await r.json().catch(()=>({error:"网络错误"}));
+  if(r.ok&&j.ok){CONF=j.config;toast("配置已保存并生效","ok");}
+  else toast("保存失败："+(j.error||r.status),"err");
+};
+
+// ---- 运行 / 测试 ----
+$("#btnRun").onclick=$("#btnRun2").onclick=async()=>{
+  $("#btnRun").disabled=true;toast("已触发生成并推送，请稍候…");
+  await fetch("/api/run",{method:"POST",headers:authHeaders(),body:JSON.stringify({force:true})});
+  setTimeout(()=>{$("#btnRun").disabled=false;refreshStatus();},1500);
+};
+$("#btnPreview").onclick=async()=>{toast("预览请到「概览」或 output/ 目录查看","ok");await refreshStatus();};
+document.querySelectorAll("[data-test]").forEach(b=>b.onclick=async()=>{
+  b.disabled=true;toast("正在向 "+b.dataset.test+" 发送测试…");
+  const r=await fetch("/api/test",{method:"POST",headers:Object.assign({"Content-Type":"application/json"},authHeaders()),body:JSON.stringify({channel:b.dataset.test})});
+  const j=await r.json().catch(()=>({}));
+  toast(j.ok?"测试发送成功 ✅":"测试失败："+(j.detail||"检查配置"),j.ok?"ok":"err");
+  b.disabled=false;
+});
+
+// ---- 状态 / 日志 ----
+async function refreshStatus(){
+  const r=await fetch("/api/status",{headers:authHeaders()});
+  if(!r.ok)return;const s=await r.json();
+  $("#stLast").textContent=s.last_push||"—";$("#stNext").textContent=s.next_run||"—";
+  $("#stSrc").textContent=s.source_mode||"—";$("#stCh").textContent=(s.enabled_channels||[]).join("、")||"无";
+  $("#stPreview").textContent=s.preview||"（暂无，点击「立即生成并推送」生成）";
+  $("#topStatus").textContent="下次 "+s.next_run;
+}
+async function loadLogs(){const r=await fetch("/api/logs",{headers:authHeaders()});if(r.ok)$("#logbox").textContent=(await r.json()).log||"（空）";}
+$("#btnLogs").onclick=loadLogs;
+
+// ---- 导出 / 导入 ----
+$("#btnExport").onclick=()=>{const b=encodeURIComponent(JSON.stringify(CONF,null,2));
+  const a=document.createElement("a");a.href="data:application/json;charset=utf-8,"+b;a.download="config.json";a.click();};
+$("#btnImport").onclick=()=>$("#fileImport").click();
+$("#fileImport").onchange=async e=>{const f=e.target.files[0];if(!f)return;
+  try{const txt=await f.text();const obj=JSON.parse(txt);
+    const r=await fetch("/api/config",{method:"PUT",headers:Object.assign({"Content-Type":"application/json"},authHeaders()),body:JSON.stringify(obj)});
+    const j=await r.json();if(j.ok){CONF=j.config;fillForm(CONF);toast("导入并保存成功","ok");}else toast("导入失败："+(j.error||""),"err");
+  }catch(err){toast("导入失败：文件格式错误","err");}};
+
+// ---- 登录 ----
+$("#pwOk").onclick=async()=>{PW=$("#pwInput").value;const r=await fetch("/api/config",{headers:authHeaders()});
+  if(r.ok){$("#mask").classList.remove("show");CONF=await r.json();fillForm(CONF);refreshStatus();}
+  else toast("口令错误","err");};
+$("#pwInput").addEventListener("keydown",e=>{if(e.key==="Enter")$("#pwOk").click();});
+
+// ---- 启动 ----
+showOnly("overview");
+loadConf();
+</script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+# 网页后台（端口 12345）：Flask 提供 REST API + 页面，APScheduler 提供内置定时调度
+Flask>=3.0.0
+APScheduler>=3.10.0
+requests>=2.31.0
+urllib3>=2.0.0
+# 渲染早报图片用（企业微信 image 模式：把早报画成 PNG 卡片，格式所见即所得）
+Pillow>=10.0.0
+# WeChatFerry v39 的 Python 客户端（包名 wcferry，非老版 wechatferry）
+# 须与微信 3.9.12.51 配套；切勿升级到不兼容版本
+wcferry==39.5.2

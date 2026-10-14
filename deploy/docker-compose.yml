@@ -1,0 +1,42 @@
+# 早报工作台 · Docker Compose（开源版 · 在 github/ 目录内执行）
+# 本文件位于 github/deploy/，构建上下文为 github/ 根目录（即本文件的上级目录 ..）。
+# 用法：
+#   cd github
+#   docker compose -f deploy/docker-compose.yml up -d --build
+# 停止：
+#   docker compose -f deploy/docker-compose.yml down
+#
+# ⚠️ 重要：开源版不含真实 config.json。首次运行前请先在 github/ 下
+#   cp config.example.json config.json 并填入你自己的密钥；
+#   否则本编排不会挂载 config.json（避免 Docker 把 config.json 建为目录导致启动失败），
+#   应用将以 config.py 默认值（空）启动，可在网页后台配置。
+#
+# 说明：
+#  - 容器常驻运行「网页后台」（端口 12345），既可网页配置，又内置 APScheduler
+#    每日按配置时间触发早报（取代外部 cron）。
+#  - output/、logs/、last_push.txt 挂载到宿主机，方便查看。
+#  - 改 src/config.py 需重新 build（或重建容器）。
+#  - ⚠️ 若拉取 python:3.11-slim 报 401 / 超时：在 Docker 主机配置国内镜像源后重试。
+
+services:
+  briefing:
+    build:
+      context: ..          # github/ 根目录为构建上下文（含 src / config.example.json / samples）
+      dockerfile: deploy/Dockerfile
+    container_name: daily-briefing
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Shanghai
+      - ADMIN_PORT=12345
+      # 可选：设置后台口令（留空=不鉴权，仅在内网可信环境使用）
+      # - ADMIN_PASSWORD=你的强口令
+    ports:
+      - "12345:12345"
+    volumes:
+      - ../output:/app/output
+      - ../logs:/app/logs
+      - ../last_push.txt:/app/last_push.txt
+      # 注意：开源版默认不挂载 config.json（见上方说明）。若你已自建 github/config.json，
+      # 可取消下一行注释以持久化网页配置：
+      # - ../config.json:/app/config.json
+      - ../src/config.py:/app/src/config.py   # 挂载默认配置，改完无需重新 build（重启容器生效）
